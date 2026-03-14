@@ -1,52 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2:3 Video Stretcher Player</title>
 
-<meta name="description" content="Free browser tool to stretch videos to 2:3 ratio and play them instantly. Upload any video and watch it stretched.">
+<title>Stretch Video to 2:3 Online – Free Video Stretch Tool</title>
 
-<meta name="keywords" content="video stretcher, stretch video 2:3, online video player, video distortion tool">
+<meta name="description" content="Free online tool to stretch video to 2:3 ratio instantly. Upload any video and play it stretched vertically in your browser.">
+
+<meta name="keywords" content="stretch video to 2:3, stretch video online, video stretch tool, stretch tool for video, stretch video vertically, stretch video ratio, resize video to 2:3, stretch video player, online video stretcher">
 
 <meta name="robots" content="index, follow">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
 body{
-  background:#111;
-  color:white;
-  font-family:Arial;
-  text-align:center;
-  padding-top:40px;
+background:#111;
+color:white;
+font-family:Arial, sans-serif;
+text-align:center;
+margin:0;
+padding:40px 20px;
+}
+
+h1{
+font-size:32px;
+margin-bottom:10px;
+}
+
+p{
+max-width:700px;
+margin:auto;
+line-height:1.6;
 }
 
 canvas{
-  width:400px;
-  height:600px;
-  background:black;
-  display:block;
-  margin:auto;
-  border-radius:10px;
+width:400px;
+height:600px;
+background:black;
+margin-top:25px;
+border-radius:12px;
 }
 
 button,input{
-  margin-top:15px;
-  font-size:16px;
-  padding:8px 15px;
+margin-top:15px;
+font-size:16px;
+padding:10px 16px;
+border-radius:6px;
+border:none;
 }
+
+button{
+cursor:pointer;
+background:#4CAF50;
+color:white;
+}
+
+button:hover{
+background:#43a047;
+}
+
+ul{
+max-width:500px;
+margin:20px auto;
+text-align:left;
+}
+
+footer{
+margin-top:50px;
+opacity:0.7;
+font-size:14px;
+}
+
 </style>
 </head>
 
 <body>
 
-<h2>2:3 Stretch Video Player</h2>
+<h1>Stretch Video to 2:3 Online</h1>
+
+<p>
+Upload a video and stretch it to a 2:3 aspect ratio instantly.
+This free browser tool plays your video stretched vertically without needing downloads or editing software.
+</p>
+
+<h2>Features</h2>
+
+<ul>
+<li>Stretch video to 2:3 ratio</li>
+<li>Play stretched video instantly</li>
+<li>Works directly in your browser</li>
+<li>No video editing software required</li>
+<li>Simple online video stretch tool</li>
+</ul>
 
 <input type="file" id="videoInput" accept="video/*"><br>
+
 <canvas id="canvas"></canvas><br>
+
 <button id="playPause">Play / Pause</button>
 
+<h2>How to stretch a video to 2:3</h2>
+
+<p>
+Upload your video file and press play. The player automatically stretches the video to a 2:3 aspect ratio while keeping the audio and playback working normally.
+</p>
+
+<footer>
+Free online video stretch tool.
+</footer>
+
 <script>
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -55,46 +121,48 @@ canvas.height = 600;
 
 const video = document.createElement("video");
 video.playsInline = true;
-video.controls = false;
 
 let animationRunning = false;
 
 document.getElementById("videoInput").addEventListener("change", e => {
 
-  const file = e.target.files[0];
-  if(!file) return;
+const file = e.target.files[0];
+if(!file) return;
 
-  const url = URL.createObjectURL(file);
-  video.src = url;
-  video.load();
+const url = URL.createObjectURL(file);
+
+video.src = url;
+video.load();
 
 });
 
 function draw(){
 
-  if(!animationRunning) return;
+if(!animationRunning) return;
 
-  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+ctx.drawImage(video,0,0,canvas.width,canvas.height);
 
-  requestAnimationFrame(draw);
+requestAnimationFrame(draw);
+
 }
 
 document.getElementById("playPause").onclick = () => {
 
-  if(video.paused){
+if(video.paused){
 
-    video.play();
-    animationRunning = true;
-    draw();
+video.play();
+animationRunning = true;
+draw();
 
-  }else{
+}else{
 
-    video.pause();
-    animationRunning = false;
+video.pause();
+animationRunning = false;
 
-  }
+}
 
 };
+
 </script>
 
 </body>
