@@ -3,88 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Canvas Stretched Video 2:3</title>
+<title>2:3 Stretched Video Player</title>
+
 <style>
-  body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-    background: #111;
-    color: #fff;
-    font-family: Arial, sans-serif;
-  }
+body{
+  background:#111;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+  padding-top:40px;
+}
 
-  canvas {
-    background: black;
-    width: 400px;  /* 2:3 ratio width */
-    height: 600px; /* 2:3 ratio height */
-    display: block;
-  }
+canvas{
+  width:400px;
+  height:600px;
+  background:black;
+  display:block;
+  margin:auto;
+  border-radius:10px;
+}
 
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  input[type="file"] {
-    margin-bottom: 20px;
-  }
+button,input{
+  margin-top:15px;
+  font-size:16px;
+  padding:8px 15px;
+}
 </style>
 </head>
+
 <body>
 
-<h1>Stretched Video 2:3 Player</h1>
-<input type="file" id="videoInput" accept="video/*">
-<canvas id="canvas"></canvas>
-<button id="playPause">Play/Pause</button>
+<h2>2:3 Stretch Video Player</h2>
+
+<input type="file" id="videoInput" accept="video/*"><br>
+<canvas id="canvas"></canvas><br>
+<button id="playPause">Play / Pause</button>
 
 <script>
-  const videoInput = document.getElementById('videoInput');
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-  const playPauseBtn = document.getElementById('playPause');
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-  let video = document.createElement('video');
-  video.crossOrigin = "anonymous";
-  video.loop = true;
+canvas.width = 400;
+canvas.height = 600;
 
-  videoInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if(file){
-      const url = URL.createObjectURL(file);
-      video.src = url;
-      video.load();
-      video.play();
-      drawFrame();
-    }
-  });
+const video = document.createElement("video");
+video.muted = true;
+video.playsInline = true;
 
-  let playing = true;
+let animationRunning = false;
 
-  playPauseBtn.addEventListener('click', () => {
-    if(playing){
-      video.pause();
-      playing = false;
-      playPauseBtn.textContent = 'Play';
-    } else {
-      video.play();
-      playing = true;
-      playPauseBtn.textContent = 'Pause';
-      drawFrame();
-    }
-  });
+document.getElementById("videoInput").addEventListener("change", e => {
 
-  function drawFrame(){
-    if(video.paused || video.ended) return;
-    // Draw the video stretched to canvas (2:3)
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    requestAnimationFrame(drawFrame);
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const url = URL.createObjectURL(file);
+  video.src = url;
+
+  video.addEventListener("loadeddata", () => {
+    video.play();
+    animationRunning = true;
+    draw();
+  }, { once:true });
+
+});
+
+function draw(){
+
+  if(!animationRunning) return;
+
+  ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+  requestAnimationFrame(draw);
+}
+
+document.getElementById("playPause").onclick = () => {
+
+  if(video.paused){
+    video.play();
+    animationRunning = true;
+    draw();
+  }else{
+    video.pause();
+    animationRunning = false;
   }
+
+};
 </script>
 
 </body>
