@@ -47,8 +47,8 @@ canvas.width = 400;
 canvas.height = 600;
 
 const video = document.createElement("video");
-video.muted = true;
 video.playsInline = true;
+video.controls = false;
 
 let animationRunning = false;
 
@@ -59,12 +59,7 @@ document.getElementById("videoInput").addEventListener("change", e => {
 
   const url = URL.createObjectURL(file);
   video.src = url;
-
-  video.addEventListener("loadeddata", () => {
-    video.play();
-    animationRunning = true;
-    draw();
-  }, { once:true });
+  video.load();
 
 });
 
@@ -80,12 +75,16 @@ function draw(){
 document.getElementById("playPause").onclick = () => {
 
   if(video.paused){
+
     video.play();
     animationRunning = true;
     draw();
+
   }else{
+
     video.pause();
     animationRunning = false;
+
   }
 
 };
