@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Stretched Video 2:3</title>
+<title>Canvas Stretched Video 2:3</title>
 <style>
   body {
     display: flex;
@@ -17,20 +17,11 @@
     font-family: Arial, sans-serif;
   }
 
-  #videoContainer {
-    width: 400px;    /* desired width */
-    height: 600px;   /* 2:3 ratio */
-    overflow: hidden;
+  canvas {
     background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  video {
-    /* force it to stretch regardless of original aspect ratio */
-    width: 100% !important;
-    height: 100% !important;
+    width: 400px;  /* 2:3 ratio width */
+    height: 600px; /* 2:3 ratio height */
+    display: block;
   }
 
   button {
@@ -48,17 +39,19 @@
 <body>
 
 <h1>Stretched Video 2:3 Player</h1>
-
 <input type="file" id="videoInput" accept="video/*">
-<div id="videoContainer">
-  <video id="video" controls></video>
-</div>
+<canvas id="canvas"></canvas>
 <button id="playPause">Play/Pause</button>
 
 <script>
   const videoInput = document.getElementById('videoInput');
-  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
   const playPauseBtn = document.getElementById('playPause');
+
+  let video = document.createElement('video');
+  video.crossOrigin = "anonymous";
+  video.loop = true;
 
   videoInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
@@ -66,20 +59,32 @@
       const url = URL.createObjectURL(file);
       video.src = url;
       video.load();
-      video.style.width = "100%";
-      video.style.height = "100%"; // force stretch
+      video.play();
+      drawFrame();
     }
   });
 
+  let playing = true;
+
   playPauseBtn.addEventListener('click', () => {
-    if(video.paused){
-      video.play();
-      playPauseBtn.textContent = 'Pause';
-    } else {
+    if(playing){
       video.pause();
+      playing = false;
       playPauseBtn.textContent = 'Play';
+    } else {
+      video.play();
+      playing = true;
+      playPauseBtn.textContent = 'Pause';
+      drawFrame();
     }
   });
+
+  function drawFrame(){
+    if(video.paused || video.ended) return;
+    // Draw the video stretched to canvas (2:3)
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    requestAnimationFrame(drawFrame);
+  }
 </script>
 
 </body>
